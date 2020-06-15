@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="3.1.1_SpringBoot" />
+        <module name="3.1.4_CLIENT" />
         <module name="3.1.2_Bootstrap" />
         <module name="CRUD_SpringBoot" />
         <module name="3.1.3_REST" />
@@ -18,6 +19,7 @@
       <module name="3.1.1_SpringBoot" options="-parameters" />
       <module name="3.1.2_Bootstrap" options="-parameters" />
       <module name="3.1.3_REST" options="-parameters" />
+      <module name="3.1.4_CLIENT" options="-parameters" />
       <module name="CRUD_SpringBoot" options="-parameters" />
     </option>
   </component>

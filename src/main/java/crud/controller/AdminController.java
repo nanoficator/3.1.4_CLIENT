@@ -1,22 +1,17 @@
 package crud.controller;
 
-import com.mysql.cj.xdevapi.JsonArray;
 import crud.model.Authority;
 import crud.model.User;
 import crud.service.AuthorityService;
 import crud.service.UserService;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
-import java.util.Map;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/admin")
@@ -25,11 +20,14 @@ public class AdminController {
 
     private UserService userService;
     private AuthorityService authorityService;
+    RestTemplate restTemplate;
 
     public AdminController(UserService userService,
-                          AuthorityService authorityService) {
+                           AuthorityService authorityService,
+                           RestTemplateBuilder restTemplateBuilder) {
         this.userService = userService;
         this.authorityService = authorityService;
+        this.restTemplate = restTemplateBuilder.basicAuthentication("admin", "admin").build();
     }
 
     @PostMapping("/add-user")
@@ -64,19 +62,34 @@ public class AdminController {
 
     @GetMapping("/all-users")
     public ResponseEntity<Collection<User>> getAllUsers() {
-        Collection<User> allUsers = userService.getAllUsers();
-        return new ResponseEntity<Collection<User>>(allUsers, HttpStatus.OK);
+        ResponseEntity<Collection<User>> allUsers = restTemplate.exchange(
+                "http://localhost:8081/admin/all-users",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Collection<User>>() {}
+        );
+        return allUsers;
     }
 
     @GetMapping("/all-authorities")
     public ResponseEntity<Collection<Authority>> getAllAuthorities() {
-        Collection<Authority> allAuthorities = authorityService.getAllAuthorities();
-        return new ResponseEntity<Collection<Authority>>(allAuthorities, HttpStatus.OK);
+        ResponseEntity<Collection<Authority>> allAuthorities = restTemplate.exchange(
+                "http://localhost:8081/admin/all-authorities",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Collection<Authority>>() {}
+        );
+        return allAuthorities;
     }
 
     @GetMapping("/authority-by-name")
     public ResponseEntity<Authority> getAuthorityById(@RequestBody String name) {
-        Authority authority = authorityService.getAuthorityByName(name);
-        return new ResponseEntity<Authority>(authority, HttpStatus.OK);
+        ResponseEntity<Authority> authority = restTemplate.exchange(
+                "http://localhost:8081/admin/authority-by-name",
+                HttpMethod.GET,
+                null,
+                Authority.class
+        );
+        return authority;
     }
 }
