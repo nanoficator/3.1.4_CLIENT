@@ -34,12 +34,13 @@ public class AdminController {
 
     @PostMapping("/add-user")
     public ResponseEntity<String> addUser(@RequestBody User user) {
-        String result = userService.addUser(user);
-        if (result.contains("Error")) {
-            return new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<String>(result, HttpStatus.OK);
-        }
+        ResponseEntity<String> result = restTemplate.exchange(
+                "http://localhost:8081/admin/add-user",
+                HttpMethod.POST,
+                new HttpEntity<User>(user, new HttpHeaders()),
+                String.class
+        );
+        return result;
     }
 
     @PostMapping("/edit-user")
