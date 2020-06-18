@@ -45,22 +45,24 @@ public class AdminController {
 
     @PostMapping("/edit-user")
     public ResponseEntity<String> editUser(@RequestBody User user) {
-        String result = userService.editUser(user);
-        if (result.contains("Error")) {
-            return new ResponseEntity<String >(result, HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<String>(result, HttpStatus.OK);
-        }
+        ResponseEntity<String> result = restTemplate.exchange(
+                "http://localhost:8081/admin/edit-user",
+                HttpMethod.POST,
+                new HttpEntity<User>(user, new HttpHeaders()),
+                String.class
+        );
+        return result;
     }
 
     @PostMapping(value = "/delete-user")
     public ResponseEntity<String> deleteUser(@RequestBody User user) {
-        String result = userService.deleteUserById(user.getId());
-        if (result.contains("Error")) {
-            return new ResponseEntity<String >(result, HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<String>(result, HttpStatus.OK);
-        }
+        ResponseEntity<String> result = restTemplate.exchange(
+                "http://localhost:8081/admin/delete-user",
+                HttpMethod.POST,
+                new HttpEntity<User>(user, new HttpHeaders()),
+                String.class
+        );
+        return result;
     }
 
     @GetMapping("/all-users")
