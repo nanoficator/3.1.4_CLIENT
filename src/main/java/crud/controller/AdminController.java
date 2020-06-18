@@ -4,7 +4,6 @@ import crud.model.Authority;
 import crud.model.User;
 import crud.service.AuthorityService;
 import crud.service.UserService;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -13,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.Charset;
 import java.util.Collection;
 
 @RestController
@@ -25,23 +23,13 @@ public class AdminController {
     private AuthorityService authorityService;
     private RestTemplate restTemplate;
 
-    HttpHeaders createHeaders(String username, String password){
-        return new HttpHeaders() {{
-            String auth = username + ":" + password;
-            byte[] encodedAuth = Base64.encodeBase64(
-                    auth.getBytes(Charset.forName("US-ASCII")) );
-            String authHeader = "Basic " + new String( encodedAuth );
-            set("Authorization", authHeader );
-        }};
-    }
-
     @Autowired
     public AdminController(UserService userService,
                            AuthorityService authorityService,
                            RestTemplateBuilder restTemplateBuilder) {
         this.userService = userService;
         this.authorityService = authorityService;
-        this.restTemplate = restTemplateBuilder.build();
+        this.restTemplate = restTemplateBuilder.basicAuthentication("admin", "admin").build();
     }
 
     @PostMapping("/add-user")
@@ -79,7 +67,7 @@ public class AdminController {
         ResponseEntity<Collection<User>> allUsers = restTemplate.exchange(
                 "http://localhost:8081/admin/all-users",
                 HttpMethod.GET,
-                new HttpEntity<Collection<User>>(createHeaders("admin", "admin")),
+                null,
                 new ParameterizedTypeReference<Collection<User>>() {}
         );
         return allUsers;
