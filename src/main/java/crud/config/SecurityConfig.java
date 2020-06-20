@@ -1,7 +1,7 @@
 package crud.config;
 
-import crud.service.AuthorityService;
-import crud.service.UserService;
+import crud.service.AuthorityServiceREST;
+import crud.service.UserServiceREST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +18,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserService userService;
-    private AuthorityService authorityService;
+    private UserServiceREST userService;
+    private AuthorityServiceREST authorityService;
     PasswordEncoder passwordEncoder;
 
     @Bean
@@ -35,8 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public SecurityConfig(UserService userService,
-                          AuthorityService authorityService,
+    public SecurityConfig(UserServiceREST userService,
+                          AuthorityServiceREST authorityService,
                           @Lazy PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.authorityService = authorityService;

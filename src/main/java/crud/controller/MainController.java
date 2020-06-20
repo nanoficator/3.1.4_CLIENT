@@ -1,8 +1,8 @@
 package crud.controller;
 
 import crud.model.User;
-import crud.service.AuthorityService;
-import crud.service.UserService;
+import crud.service.AuthorityServiceREST;
+import crud.service.UserServiceREST;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
 public class MainController {
 
-    private UserService userService;
-    private AuthorityService authorityService;
+    private UserServiceREST userService;
+    private AuthorityServiceREST authorityService;
 
-    public MainController(UserService userService,
-                          AuthorityService authorityService) {
+    public MainController(UserServiceREST userService,
+                          AuthorityServiceREST authorityService) {
         this.userService = userService;
         this.authorityService = authorityService;
     }

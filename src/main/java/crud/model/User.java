@@ -2,44 +2,18 @@ package crud.model;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.util.Collection;
 
-@Entity
-@Table (name = "users")
 public class User implements UserDetails {
 
-    @Id
-    @Column (name = "user_id", updatable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column (unique = true)
     private String username;
-
-    @Column
     private String password;
-
-    @Transient
     private String confirmPassword;
-
-    @Column
-    @ManyToMany (fetch = FetchType.EAGER)
-    @JoinTable (name = "users_authorities",
-            joinColumns = @JoinColumn (name = "user_id"),
-            inverseJoinColumns = @JoinColumn (name = "authority_id"))
     private Collection<Authority> authorities;
-
-    @Column (name = "is_account_non_expired")
     private boolean isAccountNonExpired;
-
-    @Column (name = "is_account_non_locked")
     private boolean isAccountNonLocked;
-
-    @Column (name = "is_credentials_non_expired")
     private boolean isCredentialsNonExpired;
-
-    @Column (name = "is_enabled")
     private boolean isEnabled;
 
     public User() {

@@ -2,17 +2,9 @@ package crud.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
-@Entity
-@Table (name = "authorities")
 public class Authority implements GrantedAuthority {
 
-    @Id
-    @Column (name = "authority_id", updatable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column (unique = true)
     private String name;
 
     public Long getId() {

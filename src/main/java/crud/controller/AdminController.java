@@ -3,7 +3,9 @@ package crud.controller;
 import crud.model.Authority;
 import crud.model.User;
 import crud.service.AuthorityService;
+import crud.service.AuthorityServiceREST;
 import crud.service.UserService;
+import crud.service.UserServiceREST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -21,80 +23,47 @@ public class AdminController {
 
     private UserService userService;
     private AuthorityService authorityService;
-    private RestTemplate restTemplate;
 
     @Autowired
     public AdminController(UserService userService,
-                           AuthorityService authorityService,
-                           RestTemplateBuilder restTemplateBuilder) {
+                           AuthorityService authorityService) {
         this.userService = userService;
         this.authorityService = authorityService;
-        this.restTemplate = restTemplateBuilder.basicAuthentication("admin", "admin").build();
     }
 
     @PostMapping("/add-user")
     public ResponseEntity<String> addUser(@RequestBody User user) {
-        ResponseEntity<String> result = restTemplate.exchange(
-                "http://localhost:8081/admin/add-user",
-                HttpMethod.POST,
-                new HttpEntity<User>(user, new HttpHeaders()),
-                String.class
-        );
-        return result;
+        String result = userService.addUser(user);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/edit-user")
     public ResponseEntity<String> editUser(@RequestBody User user) {
-        ResponseEntity<String> result = restTemplate.exchange(
-                "http://localhost:8081/admin/edit-user",
-                HttpMethod.POST,
-                new HttpEntity<User>(user, new HttpHeaders()),
-                String.class
-        );
-        return result;
+        String result = userService.editUser(user);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(value = "/delete-user")
     public ResponseEntity<String> deleteUser(@RequestBody User user) {
-        ResponseEntity<String> result = restTemplate.exchange(
-                "http://localhost:8081/admin/delete-user",
-                HttpMethod.POST,
-                new HttpEntity<User>(user, new HttpHeaders()),
-                String.class
-        );
-        return result;
+        String result = userService.deleteUser(user);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/all-users")
     public ResponseEntity<Collection<User>> getAllUsers() {
-        ResponseEntity<Collection<User>> allUsers = restTemplate.exchange(
-                "http://localhost:8081/admin/all-users",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<Collection<User>>() {}
-        );
-        return allUsers;
+        Collection<User> allUsers = userService.getAllUsers();
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
     @GetMapping("/all-authorities")
     public ResponseEntity<Collection<Authority>> getAllAuthorities() {
-        ResponseEntity<Collection<Authority>> allAuthorities = restTemplate.exchange(
-                "http://localhost:8081/admin/all-authorities",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<Collection<Authority>>() {}
-        );
-        return allAuthorities;
+        Collection<Authority> allAuthorities = authorityService.getAllAuthorities();
+        return new ResponseEntity<>(allAuthorities, HttpStatus.OK);
     }
 
     @GetMapping("/authority-by-name")
     public ResponseEntity<Authority> getAuthorityById(@RequestBody String name) {
-        ResponseEntity<Authority> authority = restTemplate.exchange(
-                "http://localhost:8081/admin/authority-by-name",
-                HttpMethod.GET,
-                null,
-                Authority.class
-        );
-        return authority;
+        Authority authority = authorityService.getAuthorityByName(name);
+        return new ResponseEntity<>(authority, HttpStatus.OK);
     }
 }
